@@ -684,7 +684,11 @@ static void qrtr_node_assign(struct qrtr_node *node, unsigned int nid)
 	if (!node->ilc) {
 		node->ilc = ipc_log_context_create(QRTR_LOG_PAGE_CNT, name, 0);
 	}
-	if (!node->ws)
+	/* create wakeup source for only  NID = 0.
+	 * From other nodes sensor service stream samples
+	 * cause APPS suspend problems and power drain issue.
+	 */
+	if (!node->ws && nid == 0)
 		node->ws = wakeup_source_register(name);
 }
 
